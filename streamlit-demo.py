@@ -75,7 +75,7 @@ def file_selector(folder_path='.'):
     return os.path.join(folder_path, selected_filename)
     
 def create_dataframe() -> pd.DataFrame:
-    return pd.read_csv("input/labels.csv")
+    return pd.read_csv("labels.csv")
     
 def set_standard_things():
     st.title('Dog breed classification')
