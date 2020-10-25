@@ -3,10 +3,6 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 import pandas as pd
-import time
-from tqdm import tqdm
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.preprocessing.image import img_to_array, load_img, ImageDataGenerator
 
 def main():
     set_standard_things()
