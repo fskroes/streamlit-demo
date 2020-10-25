@@ -13,15 +13,10 @@ def main():
     df_labels = create_dataframe()
     img_label = df_labels.breed
     img_label = pd.get_dummies(df_labels.breed)
-    # img_label.head()
     model = load_transfer_model()
     
     st.write('We are working with the following data.')
-    st.dataframe(df_labels.head(3)) # this allow for more specific options
-    
-    st.write('adding filepatch to dataframe')
-    df_labels['filename'] = df_labels.id.map(lambda id: f'input/data/train/{id}.jpg')
-    st.dataframe(df_labels.head(3))
+    df_labels.head(3)
     
     st.write('Data exploration')
     gr_labels = df_labels.groupby("breed").count()
@@ -32,32 +27,33 @@ def main():
     gr_labels[:10]
     
     st.write('Data exploration')
-    st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
+    st.bar_chart(df_labels.breed.unique()[:5], use_container_width=True)
     
     # Select a file
     if st.checkbox('Select a file in current directory'):
         folder_path = '.'
-        if st.checkbox('Change directory'):
-            folder_path = st.text_input('Enter folder path', '.')
+    if st.checkbox('Change directory'):
+        folder_path = st.text_input('Enter folder path', '.')
         filename = file_selector(folder_path=folder_path)
         st.write('You selected `%s`' % filename)
+        
+        # Read in image file
+        image = tf.io.read_file(filename)
+        # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
+        image = tf.image.decode_jpeg(image, channels=3)
+        # Convert the colour channel values from 0-225 values to 0-1 values
+        image = tf.image.convert_image_dtype(image, tf.float32)
+        # Resize the image to our desired size (224, 244)
+        image = tf.image.resize(image, size=(224, 224))
+        new_image = np.expand_dims(image, axis=0)
+
+        yhat = model.predict(new_image)
+        label = img_label.columns[np.argmax(yhat)]
+        
+        label
+        'Probability prediction: ', np.max(yhat[0])
+        
         st.image(filename)
-
-     # Read in image file
-    image = tf.io.read_file(filename)
-    # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
-    image = tf.image.decode_jpeg(image, channels=3)
-    # Convert the colour channel values from 0-225 values to 0-1 values
-    image = tf.image.convert_image_dtype(image, tf.float32)
-    # Resize the image to our desired size (224, 244)
-    image = tf.image.resize(image, size=(224, 224))
-    new_image = np.expand_dims(image, axis=0)
-
-    yhat = model.predict(new_image)
-    label = img_label.columns[np.argmax(yhat)]
-    
-    label
-    'Probability prediction: ', np.max(yhat[0])
     
     
     
