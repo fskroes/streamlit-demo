@@ -34,11 +34,6 @@ def main():
     st.write('Data exploration')
     st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
     
-    st.write('Data processing, reshaping data to 224, 224 pixels')
-    # show loading bar    
-    # img_pixel = reshape_data(df_labels)
-    
-    
     # Select a file
     if st.checkbox('Select a file in current directory'):
         folder_path = '.'
@@ -46,13 +41,8 @@ def main():
             folder_path = st.text_input('Enter folder path', '.')
         filename = file_selector(folder_path=folder_path)
         st.write('You selected `%s`' % filename)
+        st.image(filename)
 
-    st.image(filename)
-
-    # TODO: Add code to open and process your image file
-    # image = load_img(filename, target_size=(224, 224))
-    # image_pixel = np.array(img_to_array(image))
-    
      # Read in image file
     image = tf.io.read_file(filename)
     # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
@@ -61,21 +51,11 @@ def main():
     image = tf.image.convert_image_dtype(image, tf.float32)
     # Resize the image to our desired size (224, 244)
     image = tf.image.resize(image, size=(224, 224))
-    
-    image = np.expand_dims(image, axis=0)
-    
-    image.shape
-    
-    # st.write(filename)
-    # pred = model.predict
-    
-    yhat = model.predict(image)
-    
-    yhat.shape
-    
-    yhat[0:]
-    
+    new_image = np.expand_dims(image, axis=0)
+
+    yhat = model.predict(new_image)
     label = img_label.columns[np.argmax(yhat)]
+    
     label
     'Probability prediction: ', np.max(yhat[0])
     
@@ -87,22 +67,18 @@ def main():
 
 #@st.cache
 def load_transfer_model():
-    return tf.keras.models.load_model('/Users/fskroes/dev/vitas/notebooks/kaggle-hondenrassen/saved_model/my_model')
+    return tf.keras.models.load_model('saved_model/my_model')
    
 def file_selector(folder_path='.'):
     filenames = os.listdir(folder_path)
     selected_filename = st.selectbox('Select a file', filenames)
     return os.path.join(folder_path, selected_filename)
     
-@st.cache
-def reshape_data(df):
-    return np.array([img_to_array(load_img(img, target_size=(224, 224))) for img in tqdm(df.filename.values.tolist() ) ])
-    
 def create_dataframe() -> pd.DataFrame:
     return pd.read_csv("input/labels.csv")
     
 def set_standard_things():
-    st.title('demo - honden rassen')
+    st.title('Dog breed classification')
     seed = 42
 
 if __name__ == '__main__':
