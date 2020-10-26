@@ -3,6 +3,7 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 import pandas as pd
+import tensorflow_hub as hub
 
 def main():
     set_standard_things()
@@ -14,16 +15,15 @@ def main():
     st.write('We are working with the following data.')
     df_labels.head(3)
     
-    st.write('Data exploration')
+    st.write('Show the top-10 breed that has the most images')
     gr_labels = df_labels.groupby("breed").count()
     gr_labels = gr_labels.rename(columns = {"id" : "count"})
     gr_labels = gr_labels.sort_values("count", ascending=False)
     
-    st.write('Show the top-10 breed that has the most images')
-    gr_labels[:10]
+    st.table(gr_labels[:5])
     
-    st.write('Data exploration')
-    st.bar_chart(df_labels.breed.unique()[:5], use_container_width=True)
+    st.write('Distribution of breed (limited to 10 entry)')
+    st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
     
     # Select a file
     if st.checkbox('Select a file in current directory'):
@@ -51,27 +51,10 @@ def main():
         
         st.image(filename)
     
-    
-    
-    
-    
-    
 
-#@st.cache
-def load_transfer_model():
-    import tempfile
-    import zipfile
-    
-    myzipfile = zipfile.ZipFile('saved_model.zip')
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        myzipfile.extractall(tmp_dir)
-        
-        st.write(myzipfile.namelist()[2])
-        
-        root_folder = myzipfile.namelist()[2]
-        model_dir = os.path.join(tmp_dir, root_folder)
-        
-        return tf.keras.models.load_model(model_dir)
+@st.cache(allow_output_mutation=True)
+def load_transfer_model():       
+    return tf.keras.models.load_model('saved_model/h5_model.h5', custom_objects={'KerasLayer':hub.KerasLayer})
    
 def file_selector(folder_path='.'):
     filenames = os.listdir(folder_path)
