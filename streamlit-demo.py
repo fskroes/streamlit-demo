@@ -59,7 +59,7 @@ def main():
 
 #@st.cache
 def load_transfer_model():
-    return tf.keras.models.load_model('saved_model/my_model')
+    return tf.keras.models.load_model('saved_model/h5_model.h5')
    
 def file_selector(folder_path='.'):
     filenames = os.listdir(folder_path)
