@@ -59,7 +59,19 @@ def main():
 
 #@st.cache
 def load_transfer_model():
-    return tf.keras.models.load_model('saved_model/h5_model.h5')
+    import tempfile
+    import zipfile
+    
+    myzipfile = zipfile.ZipFile('saved_model.zip')
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        myzipfile.extractall(tmp_dir)
+        
+        st.write(myzipfile.namelist()[2])
+        
+        root_folder = myzipfile.namelist()[2]
+        model_dir = os.path.join(tmp_dir, root_folder)
+        
+        return tf.keras.models.load_model(model_dir)
    
 def file_selector(folder_path='.'):
     filenames = os.listdir(folder_path)
