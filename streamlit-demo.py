@@ -4,13 +4,15 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 import tensorflow_hub as hub
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import load_model
 
 def main():
     set_standard_things()
     df_labels = create_dataframe()
     img_label = df_labels.breed
     img_label = pd.get_dummies(df_labels.breed)
-    model = load_transfer_model()
+    model = load_model()
     
     st.write('We are working with the following data.')
     df_labels.head(3)
@@ -22,7 +24,7 @@ def main():
     
     st.table(gr_labels[:5])
     
-    st.write('Distribution of breed (limited to 10 entry)')
+    st.write('Show dataset distribution')
     st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
     
     # Select a file
@@ -51,10 +53,35 @@ def main():
         
         st.image(filename)
     
+    
+    
+    
+    
+    
 
 @st.cache(allow_output_mutation=True)
-def load_transfer_model():       
-    return tf.keras.models.load_model('saved_model/h5_model.h5', custom_objects={'KerasLayer':hub.KerasLayer})
+def load_model():
+    model_weights = 'saved_model/model.h5'
+    model_json = 'saved_model/model.json'
+    with open(model_json) as json_file:
+        loaded_model = model_from_json(json_file.read(), custom_objects={'KerasLayer':hub.KerasLayer})
+    loaded_model.load_weights(model_weights)
+    loaded_model.summary()  # included to make it visible when model is reloaded
+    #session = K.get_session()
+    return loaded_model
+
+@st.cache(allow_output_mutation=True)
+def load_transfer_model():
+    import tempfile
+    import zipfile
+    
+    myzipfile = zipfile.ZipFile('saved_model.zip')
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        myzipfile.extractall(tmp_dir)
+        root_folder = myzipfile.namelist()[1]
+        model_dir = os.path.join(tmp_dir, root_folder)
+        
+        return tf.keras.models.load_model(model_dir, custom_objects={'KerasLayer':hub.KerasLayer})
    
 def file_selector(folder_path='.'):
     filenames = os.listdir(folder_path)
