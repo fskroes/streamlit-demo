@@ -29,8 +29,10 @@ def main():
     st.write('Show dataset distribution')
     st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
     
-    image, pred, tag = get_prediction_of_image(model, img_label)
-    st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred}')
+    uploaded_file = st.file_uploader("Choose an image...", type=("jpg","png","jpeg"))
+    if uploaded_file is not None:
+        image, pred, tag = get_prediction_of_image(uploaded_file, model, img_label)
+        st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred}')
     
     
     # Select a file (for localhost)
@@ -62,23 +64,21 @@ def main():
     
     
 
-def get_prediction_of_image(model, img_label):
-    uploaded_file = st.file_uploader("Choose an image...", type=("jpg","png","jpeg"))
-    if uploaded_file is not None:
-        # Read in image file
-        image = Image.open(uploaded_file)
-        # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
-        img_array = np.array(image)
-        # Convert the colour channel values from 0-225 values to 0-1 values
-        i = tf.image.convert_image_dtype(img_array, tf.float32)
-        # Resize the image to our desired size (224, 244)
-        i = tf.image.resize(i, size=(224, 224))
-        # make it the correct dimmensions
-        new_image = np.expand_dims(i, axis=0)
-        
-        yhat = model.predict(new_image)
-        label = img_label.columns[np.argmax(yhat)]
-        return image, np.max(yhat[0]), label
+def get_prediction_of_image(uploaded_file, model, img_label):
+    # Read in image file
+    image = Image.open(uploaded_file)
+    # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
+    img_array = np.array(image)
+    # Convert the colour channel values from 0-225 values to 0-1 values
+    i = tf.image.convert_image_dtype(img_array, tf.float32)
+    # Resize the image to our desired size (224, 244)
+    i = tf.image.resize(i, size=(224, 224))
+    # make it the correct dimmensions
+    new_image = np.expand_dims(i, axis=0)
+    
+    yhat = model.predict(new_image)
+    label = img_label.columns[np.argmax(yhat)]
+    return image, np.max(yhat[0]), label
     
 
 @st.cache(allow_output_mutation=True)
