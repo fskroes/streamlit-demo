@@ -29,7 +29,7 @@ def main():
     st.write('Show dataset distribution')
     st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
     
-    uploaded_file = st.file_uploader("Choose an image...", type=("jpg","png","jpeg"))
+    uploaded_file = st.file_uploader("Choose an image...", type=("jpg","jpeg"))
     if uploaded_file is not None:
         image, pred, tag = get_prediction_of_image(uploaded_file, model, img_label)
         st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred}')
