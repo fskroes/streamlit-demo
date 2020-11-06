@@ -29,38 +29,10 @@ def main():
     st.write('Show dataset distribution')
     st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
     
-    uploaded_file = st.file_uploader("Choose an image...", type=("jpg","png","jpeg"))
+    uploaded_file = st.file_uploader("Choose an image...", type=("jpg","jpeg"))
     if uploaded_file is not None:
         image, pred, tag = get_prediction_of_image(uploaded_file, model, img_label)
-        st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred}')
-    
-    
-    # Select a file (for localhost)
-    # if st.checkbox('Select a file in current directory'):
-    #     folder_path = '.'
-    # if st.checkbox('Change directory'):
-    #     folder_path = st.text_input('Enter folder path', '.')
-    #     filename = file_selector(folder_path=folder_path)
-    #     st.write('You selected `%s`' % filename)
-        
-    #     # Read in image file
-    #     image = tf.io.read_file(filename)
-    #     # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
-    #     image = tf.image.decode_jpeg(image, channels=3)
-    #     # Convert the colour channel values from 0-225 values to 0-1 values
-    #     image = tf.image.convert_image_dtype(image, tf.float32)
-    #     # Resize the image to our desired size (224, 244)
-    #     image = tf.image.resize(image, size=(224, 224))
-    #     new_image = np.expand_dims(image, axis=0)
-
-    #     yhat = model.predict(new_image)
-    #     label = img_label.columns[np.argmax(yhat)]
-        
-    #     label
-    #     'Probability prediction: ', np.max(yhat[0])
-        
-    #     st.image(filename)
-    
+        st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred*100}')
     
     
 
