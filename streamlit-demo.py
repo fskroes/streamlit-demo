@@ -32,7 +32,7 @@ def main():
     uploaded_file = st.file_uploader("Choose an image...", type=("jpg","jpeg"))
     if uploaded_file is not None:
         image, pred, tag = get_prediction_of_image(uploaded_file, model, img_label)
-        st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred*100}')
+        st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {int(pred*100)}' + '%')
     
     
 
