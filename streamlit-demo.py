@@ -16,19 +16,19 @@ def main():
     img_label = pd.get_dummies(df_labels.breed)
     model = load_transfer_model()
     
-    st.write('We are working with the following data.')
-    df_labels.head(3)
+    # st.write('We are working with the following data.')
+    # df_labels.head(3)
     
-    st.write('Show the top-10 breed that has the most images')
-    gr_labels = df_labels.groupby("breed").count()
-    gr_labels = gr_labels.rename(columns = {"id" : "count"})
-    gr_labels = gr_labels.sort_values("count", ascending=False)
+    # st.write('Show the top-10 breed that has the most images')
+    # gr_labels = df_labels.groupby("breed").count()
+    # gr_labels = gr_labels.rename(columns = {"id" : "count"})
+    # gr_labels = gr_labels.sort_values("count", ascending=False)
     
-    st.table(gr_labels[:5])
+    # st.table(gr_labels[:5])
     
-    st.write('Show dataset distribution')
-    st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
-    
+    # st.write('Show dataset distribution')
+    # st.bar_chart(df_labels.breed.unique()[:10], use_container_width=True)
+    st.write('Upload an image of a dog and lets see what kind of dog the Transfer Learning model, based on MobileNet predicts.')
     uploaded_file = st.file_uploader("Choose an image...", type=("jpg","jpeg"))
     if uploaded_file is not None:
         image, pred, tag = get_prediction_of_image(uploaded_file, model, img_label)
