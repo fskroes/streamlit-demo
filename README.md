@@ -11,4 +11,4 @@ The original ImageNet set has quite a few different dog classes so we can reuse 
 ## So.. what is Streamlit?
 With Streamlit https://www.streamlit.io/ Turn data scripts into sharable web apps in minutes. All in Python. All for free. No front-end experience required. Streamlit is an open-source Python library that makes it easy to create and share beautiful, custom web apps for machine learning and data science. In just a few minutes you can build and deploy powerful data apps.
 
-With this Github project I want demo how you can use Machine learning with Streamlit.
+With this Github project I want demo how you can use a Machine learning model with Streamlit. 
