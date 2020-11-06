@@ -35,34 +35,6 @@ def main():
         st.image(image, width=300, caption=f'Class: {tag} and probability prediction: {pred}')
     
     
-    # Select a file (for localhost)
-    # if st.checkbox('Select a file in current directory'):
-    #     folder_path = '.'
-    # if st.checkbox('Change directory'):
-    #     folder_path = st.text_input('Enter folder path', '.')
-    #     filename = file_selector(folder_path=folder_path)
-    #     st.write('You selected `%s`' % filename)
-        
-    #     # Read in image file
-    #     image = tf.io.read_file(filename)
-    #     # Turn the jpeg image into numerical Tensor with 3 colour channels (Red, Green, Blue)
-    #     image = tf.image.decode_jpeg(image, channels=3)
-    #     # Convert the colour channel values from 0-225 values to 0-1 values
-    #     image = tf.image.convert_image_dtype(image, tf.float32)
-    #     # Resize the image to our desired size (224, 244)
-    #     image = tf.image.resize(image, size=(224, 224))
-    #     new_image = np.expand_dims(image, axis=0)
-
-    #     yhat = model.predict(new_image)
-    #     label = img_label.columns[np.argmax(yhat)]
-        
-    #     label
-    #     'Probability prediction: ', np.max(yhat[0])
-        
-    #     st.image(filename)
-    
-    
-    
 
 def get_prediction_of_image(uploaded_file, model, img_label):
     # Read in image file
