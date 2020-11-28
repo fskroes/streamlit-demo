@@ -1,4 +1,4 @@
-# Streamlit Machine Learning
+# Streamlit Machine Learning [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/fskroes/streamlit-machine_learning/streamlit-demo.py)
 
 
 ## The dataset
